@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     buildToolsVersion rootProject.buildToolsVersion
+    testOptions {
+        reportDir="$project.buildDir"+123
+    }
     defaultConfig {
         applicationId "com.example.android.testing.uiautomator.BasicSample"
         minSdkVersion 18
