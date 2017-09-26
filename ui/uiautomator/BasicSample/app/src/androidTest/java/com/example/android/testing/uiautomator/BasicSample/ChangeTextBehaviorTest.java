@@ -57,6 +57,7 @@ public class ChangeTextBehaviorTest {
     public void startMainActivityFromHomeScreen() {
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.hasObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"));
 
         // Start from the home screen
         mDevice.pressHome();
@@ -65,7 +66,6 @@ public class ChangeTextBehaviorTest {
         final String launcherPackage = getLauncherPackageName();
         assertThat(launcherPackage, notNullValue());
         mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
-
         // Launch the blueprint app
         Context context = InstrumentationRegistry.getContext();
         final Intent intent = context.getPackageManager()
