@@ -28,6 +28,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
+import android.support.test.uiautomator.Configurator;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.Until;
@@ -59,9 +60,9 @@ public class ChangeTextBehaviorTest {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.hasObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"));
 
+        Configurator.getInstance().setWaitForIdleTimeout(1111);
         // Start from the home screen
         mDevice.pressHome();
-
         // Wait for launcher
         final String launcherPackage = getLauncherPackageName();
         assertThat(launcherPackage, notNullValue());
@@ -89,11 +90,11 @@ public class ChangeTextBehaviorTest {
                 .setText(STRING_TO_BE_TYPED);
         mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"))
                 .click();
-
         // Verify the test is displayed in the Ui
         UiObject2 changedText = mDevice
                 .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
                         500 /* wait 500ms */);
+
         assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
     }
 
