@@ -1,0 +1,46 @@
+language: android
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.gradle
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-23.0.3
+    - android-24
+    - sys-img-armeabi-v7a-android-21
+    - extra-android-m2repository
+  licenses:
+    - 'android-sdk-license-.+'
+
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    - secure: "lPttF+AikE2/Rtw5CO49XMMD2cLEdOUnswmtMX5rIg4Ot8XZ3zx0tDan/8bvAENZZh2xLbD2e+sHrCCSVpmyH+nHBRu5fMzUZww30gV8GDgwWJqKmQT/TUUdrpPFEYDfEFhy0WtDnw7LO/DwB3MjQVMrp9huzm8UYBGwSIiQ6GI="
+    - secure: "Z4LXYWoxV2ZAL3onkc5YIWUo1z8ftVSS6nvfEpc6pBWam5HbTM7XVwzbyr0d9edT/1H+/rVyyZQJ9j1JZjpvX9WA+0RVMTgYU2aVdV/EyaQesNYDZfBr5CUteEj3GFxEIzy0wgWgPfbUb44K577LyB6ra9TdZUdEngCTbXCUmwo="
+
+before_install:
+  - export TERM=dumb
+
+install:
+  - ./gradlew -q assemble
+
+before_script:
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - mksdcard -l e 512M sdcard.img
+  - emulator -avd test -no-skin -no-audio -no-window -sdcard sdcard.img &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
+
+script:
+  - ./gradlew clean build install
+  - ( cd example && ../gradlew clean spoon )
+
+after_success:
+  - ./scripts/deploy_to_maven.sh

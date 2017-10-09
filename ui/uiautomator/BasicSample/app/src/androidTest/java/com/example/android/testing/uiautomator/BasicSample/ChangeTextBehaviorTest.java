@@ -28,9 +28,12 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
+import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.Configurator;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObject2;
+import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -54,12 +57,20 @@ public class ChangeTextBehaviorTest {
 
     private UiDevice mDevice;
 
+    public static int getLaunchTimeout() {
+        return LAUNCH_TIMEOUT;
+    }
+
     @Before
     public void startMainActivityFromHomeScreen() {
+
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.hasObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"));
-
+        mDevice.getCurrentPackageName();
+        mDevice.clearLastTraversedText();
+        UiObject uiObject = new UiObject(new UiSelector().text("aaa"));
+        uiObject.waitUntilGone(123);
         Configurator.getInstance().setWaitForIdleTimeout(1111);
         // Start from the home screen
         mDevice.pressHome();
@@ -88,6 +99,8 @@ public class ChangeTextBehaviorTest {
         // Type text and then press the button.
         mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
                 .setText(STRING_TO_BE_TYPED);
+        UiObject2 aa=  mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"));
+        aa.click();
         mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"))
                 .click();
         // Verify the test is displayed in the Ui
